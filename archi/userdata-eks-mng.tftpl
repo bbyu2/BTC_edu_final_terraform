@@ -1,0 +1,71 @@
+#!/bin/bash
+hostnamectl set-hostname eks-mng
+timedatectl set-timezone Asia/Seoul
+# eksctl 설치
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+mv /tmp/eksctl /usr/local/bin
+# kubectl 권한할당
+curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.23.7/2022-06-29/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+echo 'export PATH=$PATH:$HOME/bin' >> /home/ec2-user/.bashrc
+echo -e '#!/bin/bash
+# Author: admin <admin@fakemail.com>
+
+##### Parameters #####
+aws_original_profile=$1
+aws_mfa_token=$2
+aws_mfa_profile_name="abc-profile"
+session_duration=82800 #You can choose from 900 seconds (15 minutes) to 129,600 seconds (36 hours). I set it to 82800 (23 hours).
+######################
+
+create_new_credentials() {
+    local aws_original_profile=$1
+    local aws_mfa_token=$2
+    local aws_mfa_profile_name=$3
+    local session_duration=$4
+
+    local mfa_serial_number=$(aws configure --profile "${aws_original_profile}" get aws_arn_mfa)
+    if [ -z "${mfa_serial_number}" ] ; then
+        echo "ERROR mfa_serial_number is empty for profile ${mfa_serial_number}. Set it in default credential file with key aws_arn_mfa"
+        exit 1
+    fi
+
+    local tmp_credentials=$(aws sts get-session-token \
+        --profile "${aws_original_profile}" \
+        --serial-number "${mfa_serial_number}"  \
+        --token-code "${aws_mfa_token}" \
+        --duration-second "${session_duration}" )
+    if [ $? -ne 0 ]; then
+        echo "ERROR. Check your profile or MFA"
+        exit 2
+    fi
+
+    local aws_access_key_id=$(echo "${tmp_credentials}" | jq .Credentials.AccessKeyId | sed "s/\"//g")
+    local aws_secret_access_key=$(echo "${tmp_credentials}" | jq .Credentials.SecretAccessKey | sed "s/\"//g")
+    local aws_session_token=$(echo "${tmp_credentials}" | jq .Credentials.SessionToken | sed "s/\"//g")
+
+    aws configure --profile "${aws_mfa_profile_name}" set aws_access_key_id ${aws_access_key_id}
+    aws configure --profile "${aws_mfa_profile_name}" set aws_secret_access_key ${aws_secret_access_key}
+    aws configure --profile "${aws_mfa_profile_name}" set aws_session_token ${aws_session_token}
+
+    echo "Done, now you can use your mfa profile ${aws_mfa_profile_name}"
+}
+
+create_new_credentials "${aws_original_profile}" "${aws_mfa_token}" "${aws_mfa_profile_name}" "${session_duration}"' > /home/ec2-user/aws_auth_mfa.sh
+chmod +x /home/ec2-user/aws_auth_mfa.sh
+# docker 설치
+yum install docker -y
+systemctl enable --now docker
+usermod -aG docker ec2-user
+yum update -y
+# mysql, git, jq 설치
+yum install mysql git jq -y
+# Openjdk 설치
+amazon-linux-extras install java-openjdk11 -y
+# kubectl 자동완성
+source <(kubectl completion bash) 
+echo "source <(kubectl completion bash)" >> /home/ec2-user/.bashrc
+# ssh 포트 변경
+echo -e 'Port 22222 \n' >> /etc/ssh/sshd_config
+service sshd restart

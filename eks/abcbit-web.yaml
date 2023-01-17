@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: abcbit-web-deploy
+  namespace: abcbit
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      name: abcbit-web-pod
+      labels:
+        app: web
+    spec:
+      containers:
+      - image: dongheeshin/abcbit2:test
+        imagePullPolicy: Always
+        name: abcbit-web-container
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+
+          initialDelaySeconds: 30
+          periodSeconds: 60
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+        volumeMounts:
+        - name: abclog-storage
+          mountPath: "/var/log/abclog/"
+      volumes:
+      - name: abclog-storage
+        persistentVolumeClaim:
+          claimName: abc-pvc
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: abcbit-web-svc
+  namespace: abcbit
+spec:
+  type:
+    NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    name: web
+    protocol: TCP
+  selector:
+    app: web
+
+---
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: abcbit-web-ingress
+  namespace: abcbit
+  annotations:
+    # Ingress Core Setting
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    # SSL Settings
+    cert-manager.io/issuer: abcbit-issuer
+    alb.ingalb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:102120298168:certificate/7fd8e8e3-60f8-4cd4-94f0-11c467b3b305
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+
+spec:
+  ingressClassName: alb
+  rules:
+    - host: www.abcbit.shop
+      http:
+       paths:
+         - path: /
+           pathType: Prefix
+           backend:
+             service:
+               name: abcbit-web-svc  # web service와 name 동일하게 !!
+               port:
+                 number: 80

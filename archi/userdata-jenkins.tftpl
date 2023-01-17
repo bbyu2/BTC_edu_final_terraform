@@ -1,0 +1,20 @@
+#!/bin/bash
+# 기본설정
+hostnamectl set-hostname jenkins
+timedatectl set-timezone Asia/Seoul
+# 자바, 필요패키지 설치
+amazon-linux-extras install java-openjdk11 -y
+yum install -y fontconfig
+yum install -y wget
+yum install -y git
+yum install -y docker
+usermod -aG docker ec2-user
+# repository 및 repository key 추가
+wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+yum install -y jenkins
+systemctl enable --now  jenkins.service
+systemctl start docker.service
+systemctl enable docker.service
+echo -e 'Port 22222 \n' >> /etc/ssh/sshd_config
+service sshd restart

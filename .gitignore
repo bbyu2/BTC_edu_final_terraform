@@ -1,0 +1,9 @@
+archi/.terraform/
+archi/.terraform.lock.hcl
+archi/.terraform.tfstate.lock.info
+archi/terraform.tfstate
+archi/terraform.tfstate.backup
+archi/abc-key
+archi/abc-key.pub
+eks/get_helm.sh
+

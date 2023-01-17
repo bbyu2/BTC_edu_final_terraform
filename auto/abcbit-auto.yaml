@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: abcbit-auto-deploy
+  namespace: abcbit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auto
+  template:
+    metadata:
+      name: abcbit-auto-pod
+      labels:
+        app: auto
+    spec:
+      containers:
+      - image: 102120298168.dkr.ecr.ap-northeast-2.amazonaws.com/abcbit-auto:3
+        name: abcbit-auto-container

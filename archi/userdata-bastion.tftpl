@@ -1,0 +1,5 @@
+#!/bin/bash
+hostnamectl set-hostname bastion
+timedatectl set-timezone Asia/Seoul
+echo -e 'Port 22222 \n' >> /etc/ssh/sshd_config
+service sshd restart
