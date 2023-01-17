@@ -5,7 +5,8 @@
 #### [3. Monitoring](#Monitorting)
 #### [4. Log 관리](#Log-관리)
 
-----
+***
+
 ### Solution Architecture
 #### Terraform을 이용한 인프라 자동화 
 ![image](https://user-images.githubusercontent.com/84059211/212466595-97a4bbe5-d361-4e38-ad72-0f0f5cc3e9ec.png)
@@ -22,5 +23,5 @@
 #### 모니터링 이중화를 위한 쉘 스크립트 작성
 ![image](https://user-images.githubusercontent.com/84059211/212467216-f6e2c7ff-d5fd-4dbe-b769-5091ab08400e.png)
 
-### Log-관리
+### Log 관리
 ![image](https://user-images.githubusercontent.com/84059211/212467232-c9a98e2b-a5d7-4760-b8e1-ab8cc45e792f.png)
