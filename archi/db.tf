@@ -12,9 +12,9 @@ resource "aws_rds_cluster" "cluster" {
   engine_version         = "5.7.mysql_aurora.2.10.2"
   cluster_identifier     = "abc-mysql"
   vpc_security_group_ids = [resource.aws_security_group.rds-sg.id]
-  port                   = 33333
-  master_username        = "master"
-  master_password        = "qwer1234"
+  port                   = ####
+  master_username        = "####"
+  master_password        = "####"
   database_name          = "abcbit"
 
   db_subnet_group_name = resource.aws_db_subnet_group.db.name
