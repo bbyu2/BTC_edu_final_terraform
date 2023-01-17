@@ -1,4 +1,4 @@
-# Infra
+# ABCbit 인프라 자동화
 ### 목차
 #### [1. Architecture](#Solution-Architecture)
 #### [2. Kubernetes](#Kubernetes)
