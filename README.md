@@ -1,5 +1,9 @@
 ## Infra
-### Solution Architecture
+### 목차
+[1. Architecture](#Solution-Architecture)
+[2. Kubernetes](#Kubernetes)
+
+## Solution Architecture
 #### Terraform을 이용한 인프라 자동화 
 ![image](https://user-images.githubusercontent.com/84059211/212466595-97a4bbe5-d361-4e38-ad72-0f0f5cc3e9ec.png)
 
