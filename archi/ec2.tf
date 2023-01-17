@@ -1,7 +1,7 @@
 # key pair
 resource "aws_key_pair" "abc-key" {
-  key_name   = "abc-key"
-  public_key = file("abc-key.pub")
+  key_name   = "####"
+  public_key = file("####")
 }
 
 # bastion instance
