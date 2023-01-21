@@ -2,9 +2,11 @@
 
 ### Solution Architecture
 ```
-Terraform을 이용한 인프라 자동화 
+Terraform을 이용한 AWS의 리소스 생성 및 자동화 
 ```
 ![image](https://user-images.githubusercontent.com/84059211/212466595-97a4bbe5-d361-4e38-ad72-0f0f5cc3e9ec.png)
+
+<br/>
 
 ### Kubernetes
 ```
@@ -16,6 +18,8 @@ namespace(NS)를 통한 Kubernetes환경 분리
 ```
 ![image](https://user-images.githubusercontent.com/84059211/212466655-d20a7099-78ea-4139-be11-0ce9950462c3.png)
 
+<br/>
+
 ### Monitorting
 ```
 EKS의 Node 및 Pod 모니터링 진행
@@ -24,6 +28,8 @@ EKS의 Node 및 Pod 모니터링 진행
 3. CPU, Memory등의 사용률 뿐만 아니라 HPA(Horizontal Pod Autoscaling)상태, Deployment의 업데이트 현황등을 모니터링 진행하여 상태 체크
 ```
 ![image](https://user-images.githubusercontent.com/84059211/212467121-db4aa420-dafa-47c7-9528-c567451be119.png)
+
+<br/>
 
 #### AWS 리소스 모니터링
 ```
@@ -34,6 +40,8 @@ AWS의 리소스 모니터링 진행
 ```
 ![image](https://user-images.githubusercontent.com/84059211/212467184-1bd1d661-7365-4478-b80f-ad8f3f4edbfc.png)
 
+<br/>
+
 #### 모니터링 이중화를 위한 쉘 스크립트 작성
 ```
 1. 웹 서비스의 URL별 상태 체크 진행(메인, 거래소, 자동매매 페이지 별로 URL 상태 체크)
@@ -41,6 +49,8 @@ AWS의 리소스 모니터링 진행
 3. 위 작업들은 진행 후 Slack을 통해 알림을 받을 수 있음
 ```
 ![image](https://user-images.githubusercontent.com/84059211/212467216-f6e2c7ff-d5fd-4dbe-b769-5091ab08400e.png)
+
+<br/>
 
 ### Log 관리
 ```
